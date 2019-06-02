@@ -1,0 +1,54 @@
+version: '3'
+services:
+  # Third party stuff
+  # We need the container to be running Postgres and Redis
+  postgres:
+    image: 'postgres:latest'
+  redis:
+    image: 'redis:latest'
+  # Our stuff
+  nginx:
+    # nginx always has to be running so restart it if it crashes
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - '3050:80'
+  # Using api instead of server because server is a reserved keyword in nginx
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server 
+    volumes:
+      # Specify which directories will be used our app
+      - /app/node_modules
+      # When inside the container, any reference to ./server should be replaced by
+      # ./app because that's what we specified in the Dockerfile.dev file
+      - ./server:/app
+    environment:
+      - REDIS_HOST=redis
+      # Comes from DockerHub Redis docs
+      - REDIS_PORT=6379
+      # Comes from DockerHub Postgres docs
+      - PG_USER=postgres
+      - PG_HOST=postgres
+      - PG_DATABASE=postgres
+      - PG_PASSWORD=postgres_password
+      - PG_PORT=5432
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+  worker:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    volumes:
+      - /app/node_modules
+      - ./worker:/app
+
+  
