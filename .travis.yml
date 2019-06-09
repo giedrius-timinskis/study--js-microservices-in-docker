@@ -14,10 +14,10 @@ script:
 # Tests passed, run production build
 after_success:
   # Build all Docker images using default Dockerfile config
-  - docker build -t gtiminskis/study--js-microservices-in-docker-CLIENT ./client
-  - docker build -t gtiminskis/study--js-microservices-in-docker-NGINX ./nginx
-  - docker build -t gtiminskis/study--js-microservices-in-docker-SERVER ./server
-  - docker build -t gtiminskis/study--js-microservices-in-docker-WORKER ./worker
+  - docker build -t gtiminskis/study--js-microservices-in-docker-client ./client
+  - docker build -t gtiminskis/study--js-microservices-in-docker-nginx ./nginx
+  - docker build -t gtiminskis/study--js-microservices-in-docker-server ./server
+  - docker build -t gtiminskis/study--js-microservices-in-docker-worker ./worker
   # Log in to Docker CLI
   # First execute righthand side - login and enter account name, then use the lefthand as input for password 
   - echo "$DOCKER_PWD" | docker login -u "$DOCKER_ID" --password-stdin
