@@ -22,7 +22,7 @@ after_success:
   # First execute righthand side - login and enter account name, then use the lefthand as input for password 
   - echo "$DOCKER_PWD" | docker login -u "$DOCKER_ID" --password-stdin
   # Push images to Docker Hub
-  - docker push gtiminskis/study--js-microservices-in-docker-CLIENT
-  - docker push gtiminskis/study--js-microservices-in-docker-NGINX
-  - docker push gtiminskis/study--js-microservices-in-docker-SERVER
-  - docker push gtiminskis/study--js-microservices-in-docker-WORKER
+  - docker push gtiminskis/study--js-microservices-in-docker-client
+  - docker push gtiminskis/study--js-microservices-in-docker-nginx
+  - docker push gtiminskis/study--js-microservices-in-docker-server
+  - docker push gtiminskis/study--js-microservices-in-docker-worker
