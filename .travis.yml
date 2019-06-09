@@ -1,0 +1,28 @@
+sudo: required
+services:
+  - docker
+
+# We want to make sure tests are passing before running the production build
+before_install:
+  # Build docker image to use for running tests
+  - docker build -t gtiminskis/run-client-tests -f ./client/Dockerfile.dev ./client
+
+script:
+  # Script for running tests in /client
+  - docker run gtiminskis/run-client-tests npm test -- --coverage
+
+# Tests passed, run production build
+after_success:
+  # Build all Docker images using default Dockerfile config
+  - docker build -t gtiminskis/study--js-microservices-in-docker-CLIENT ./client
+  - docker build -t gtiminskis/study--js-microservices-in-docker-NGINX ./nginx
+  - docker build -t gtiminskis/study--js-microservices-in-docker-SERVER ./server
+  - docker build -t gtiminskis/study--js-microservices-in-docker-WORKER ./worker
+  # Log in to Docker CLI
+  # First execute righthand side - login and enter account name, then use the lefthand as input for password 
+  - echo "$DOCKER_PWD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Push images to Docker Hub
+  - docker push gtiminskis/study--js-microservices-in-docker-CLIENT
+  - docker push gtiminskis/study--js-microservices-in-docker-NGINX
+  - docker push gtiminskis/study--js-microservices-in-docker-SERVER
+  - docker push gtiminskis/study--js-microservices-in-docker-WORKER
