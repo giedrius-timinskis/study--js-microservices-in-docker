@@ -14,7 +14,7 @@ script:
 # Tests passed, run production build
 after_success:
   # Build all Docker images using default Dockerfile config
-  - docker build --no-cache -t "$DOCKER_ID"/microservices-client ./client
+  - docker build -t "$DOCKER_ID"/microservices-client ./client
   - docker build -t "$DOCKER_ID"/microservices-nginx ./nginx
   - docker build -t "$DOCKER_ID"/microservices-server ./server
   - docker build -t "$DOCKER_ID"/microservices-worker ./worker
