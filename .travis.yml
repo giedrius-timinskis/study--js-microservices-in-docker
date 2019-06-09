@@ -9,7 +9,7 @@ before_install:
 
 script:
   # Script for running tests in /client
-  - docker run gtiminskis/run-client-tests npm test -- --coverage
+  - docker run gtiminskis/run-client-tests npm run test:ci
 
 # Tests passed, run production build
 after_success:
