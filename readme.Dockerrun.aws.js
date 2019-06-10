@@ -13,14 +13,17 @@
         // Shortcut name to the container, similar to how it's defined in docker-compose
         "hostname": "client",
         // If the container crashes keep the other containers running
-        "essential": false
+        "essential": false,
+        // Elastic Beanstalk requires specifying how much memory to allocate to the container
+        "memory": 128
       },
       // ...
       {
         "name": "server",
         "image": "gtntaz/microservices-server",
         "hostname": "api", // Since we remapped the server to api due to nginx constraints, we have to specify it here
-        "essential": false
+        "essential": false,
+        "memory": 128
       },
       // ...
       {
@@ -29,6 +32,7 @@
         // If this container crashes, we want to shut down the whole app
         // Since nginx is doing the routing, the app won't work without it
         "essential": true,
+        "memory": 128,
         // Generic port mapping, following values that are defined in docker-compose
         "portMappings": [
           {
