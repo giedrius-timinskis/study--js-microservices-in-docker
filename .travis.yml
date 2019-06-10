@@ -26,3 +26,20 @@ after_success:
   - docker push "$DOCKER_ID"/microservices-nginx
   - docker push "$DOCKER_ID"/microservices-server
   - docker push "$DOCKER_ID"/microservices-worker
+  # Trigger Elastic Beanstalk deploy
+deploy:
+  provider: elasticbeanstalk
+  region: us-east-1
+  # Get these from the breadcrumb of ElasticBean instance
+  app: study--js-microservices-in-docker
+  env: StudyJsMicroservicesInDocker-env
+  # Get these from S3
+  bucket_name: elasticbeanstalk-us-east-1-089083709043
+  bucket_path: study--js-microservices-in-docker
+  # Only deploy to prod on merge to master
+  on:
+    branch: master
+  # These are stored in Travis as env vars
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY
