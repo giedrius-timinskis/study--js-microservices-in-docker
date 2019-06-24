@@ -1,0 +1,16 @@
+# This Pod runs a single container
+apiVersion: v1
+kind: Pod
+metadata:
+  # Unique ID for K8s to know what to update
+  name: client-pod
+  labels:
+    # Key/value selector for this Pod to other Kubernetes services
+    # Note that it's both key: value. Could be anything (app: web, etc)
+    component: web
+spec:
+  containers:
+    - name: client
+      image: gtntaz/microservices-client
+      ports:
+        - containerPort: 3000

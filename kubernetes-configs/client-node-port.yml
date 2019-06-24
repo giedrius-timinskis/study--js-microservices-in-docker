@@ -1,0 +1,19 @@
+# This Service (NodePort) is basically a router that does port forwarding within Kubernetes
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-node-port
+spec:
+  type: NodePort
+  ports:
+      # Port for other Pods within Kubernetes to connect to this service
+    - port: 3050
+      # Send the traffic to port 3000 of the application
+      targetPort: 3000
+      # Public access port (e.g. to connect via browser)
+      # Has to be within 30000-32767 range 
+      nodePort: 31515
+  selector:
+    # This will target the client-pod because component: web is declared there
+    # Is actually targetting anything that has this k/v
+    component: web
