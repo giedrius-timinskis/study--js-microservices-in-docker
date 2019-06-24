@@ -26,6 +26,9 @@ class Fib extends Component {
   }
 
   renderSeenIndexes() {
+    if (!this.state.seenIndexes || !this.state.seenIndexes.length || !Array.isArray(this.state.seenIndexes)) {
+      return <p>No indexes found!</p>
+    }
     return this.state.seenIndexes.map(({ number }) => number).join(', ');
   }
 
@@ -56,7 +59,7 @@ class Fib extends Component {
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
-          <label>Enter your index:</label>
+          <label>Enter your index 2.0:</label>
           <input
             value={this.state.index}
             onChange={event => this.setState({ index: event.target.value })}
