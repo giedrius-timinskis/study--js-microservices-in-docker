@@ -25,7 +25,7 @@ services:
       - /app/node_modules
       # When inside the container, any reference to ./server should be replaced by
       # ./app because that's what we specified in the Dockerfile.dev file
-      # - ./server:/app
+      - ./server:/app
     environment:
       - REDIS_HOST=redis
       # Comes from DockerHub Redis docs
@@ -42,13 +42,16 @@ services:
       context: ./client
     volumes:
       - /app/node_modules
-      # - ./client:/app
+      - ./client:/app
   worker:
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     build:
       dockerfile: Dockerfile.dev
       context: ./worker
     volumes:
       - /app/node_modules
-      # - ./worker:/app
+      - ./worker:/app
 
   
