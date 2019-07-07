@@ -15,4 +15,10 @@ spec:
       containers:
         - name: worker
           image: gtntaz/microservices-worker
-        # no ports required because only internal apps will talk to this app
+          # no ports required because only internal apps will talk to this app
+          env:
+            - name: REDIS_HOST
+              # defined in redis-cluster-ip-service.yaml
+              value: redis-cluster-ip-service
+            - name: REDIS_PORT
+              value: '6379'

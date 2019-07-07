@@ -28,4 +28,10 @@ spec:
               # Specify where exactly to save data in the volume
               mountPath: /var/lib/postgresql/data
               # Postgres specific setup - store all data under postgres directory within mountpath
-              subPath: postgres
+              # subPath: postgres
+          env:
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgpassword
+                  key: PG_PASSWORD

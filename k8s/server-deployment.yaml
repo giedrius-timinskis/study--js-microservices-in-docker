@@ -17,3 +17,25 @@ spec:
           image: gtntaz/microservices-server
           ports:
             - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              value: redis-cluster-ip-service
+            - name: REDIS_PORT
+              value: '6379'
+            - name: PG_USER
+              # Hardcoding the default for now
+              value: postgres
+            - name: PG_HOST
+              # Hostname defined in postgres-cluster-ip-service.yaml
+              value: postgres-cluster-ip-service
+            - name: PG_PORT
+              value: '5432'
+            - name: PG_DATABASE
+              # Hardcoded for now as well
+              value: postgres
+            - name: PG_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  # We put this in k8s secrets, this value is coming from there. `kubectl get secrets`
+                  name: pgpassword
+                  key: PG_PASSWORD

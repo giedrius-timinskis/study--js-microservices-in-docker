@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    # Use nginx for lb
+    kubernetes.io/ingress.class: nginx
+    # set nginx rule to rewrite requests to / (e.g. /api => /)
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  rules:
+    - http:
+       paths:
+        # Route rules for client
+        - path: /?(.*)
+          backend:
+            serviceName: client-cluster-ip-service
+            servicePort: 3000
+        # Route rules for server
+        - path: /api/?(.*)
+          backend:
+            serviceName: server-cluster-ip-service
+            servicePort: 5000
