@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: web
+  ports:
+    # Port through which other applications in cluster can access
+    - port: 3000
+      # Actual port that the application is running on
+      targetPort: 3000

@@ -1,3 +1,0 @@
-FROM nginx
-# Copy our config and write it as conf.d inside the container
-COPY ./default.conf /etc/nginx/conf.d/default.conf
