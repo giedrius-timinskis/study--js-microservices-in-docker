@@ -12,8 +12,20 @@ spec:
       labels:
         component: postgres
     spec:
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            # points to database-persistent-volume-claim.yaml
+            claimName: database-persistent-volume-claim
       containers:
         - name: postgres
           image: postgres
           ports:
             - containerPort: 5432
+          volumeMounts:
+            # Once the volume is mounted by k8s, tell the container to use it
+            - name: postgres-storage
+              # Specify where exactly to save data in the volume
+              mountPath: /var/lib/postgresql/data
+              # Postgres specific setup - store all data under postgres directory within mountpath
+              subPath: postgres
