@@ -1,0 +1,40 @@
+sudo: required
+services:
+  - docker
+env:
+  global:
+    # Add sha global variable so we can tag the Docker build
+    - SHA=$(git rev-parse HEAD)
+    # Turn off any prompts from Google Cloud SDK
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+before_install:
+  # Pass in the encrypted credentials
+  - openssl aes-256-cbc -K $encrypted_0c35eebf403c_key -iv $encrypted_0c35eebf403c_iv -in service-account.json.enc -out service-account.json -d
+  # 1. Install google cloud sdk and apply it
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  # Install kubectl via gcloud console
+  - gcloud components update kubectl
+  # Authorize gcloud with account details
+  - gcloud auth activate-service-account --key-file service-account.json
+  # Set project
+  - gcloud config set project k8s-js-microservices
+  # Set zone
+  - gcloud config set compute/zone australia-southeast1-a
+  # Specify the name of k8s cluster
+  - gcloud container clusters get-credentials k8s-js-multicluster
+  # Sign into Docker account
+  - echo "$DOCKER_PWD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Run tests of client in a temporary docker container
+  - docker build -t gtntaz/client-test -f ./client.Dockerfile.dev ./client
+
+script:
+  - docker run gtntaz/client-test npm test -- --coverage
+
+deploy:
+  # We provide our own script for deploy
+  provider: script
+  script: bash ./deploy.sh
+  # Execute only on master change
+  on:
+    branch: master
