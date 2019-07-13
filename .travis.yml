@@ -26,7 +26,7 @@ before_install:
   # Sign into Docker account
   - echo "$DOCKER_PWD" | docker login -u "$DOCKER_ID" --password-stdin
   # Run tests of client in a temporary docker container
-  - docker build -t gtntaz/client-test -f ./client.Dockerfile.dev ./client
+  - docker build -t gtntaz/client-test -f ./client/Dockerfile.dev ./client
 
 script:
   - docker run gtntaz/client-test npm test -- --coverage
