@@ -1,0 +1,45 @@
+apiVersion: skaffold/v1beta2
+kind: Config
+build:
+  local:
+    # On local dev we don't want to push the updated image to Docker hub
+    push: false
+  artifacts:
+    # Should be self-explainatory
+    - image: gtntaz/microservices-client
+      context: client
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        # Glob matchers
+        # Whenever JS, CSS, or HTML files change
+        '**/*.js': .
+        '**/*.css': .
+        '**/*.html': .
+    - image: gtntaz/microservices-server
+      context: server
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        '**/*.js': .
+    - image: gtntaz/microservices-worker
+      context: worker
+      docker:
+        dockerfile: Dockerfile.dev
+      sync:
+        '**/*.js': .
+deploy:
+  kubectl:
+    manifests:
+      # Specify which Kubernetes configs Skaffold should manage
+      # So, whenever we change js, css, or html inject those files into client-deployment pod
+      # Adding k8s configs here also allows Skaffold to shut down/cleanup when the containers are not being used in local
+      - k8s/client-deployment.yaml
+      - k8s/server-deployment.yaml
+      - k8s/worker-deployment.yaml
+      - k8s/client-cluster-ip-service.yaml
+      - k8s/server-cluster-ip-service.yaml
+
+# Run skaffold dev to start all containers
+# When skaffold dev is not running, k8s will not run all containers on local
+# Note that if we add redis or postgres deployments it will shut them down too, and we might not want to kill databases
